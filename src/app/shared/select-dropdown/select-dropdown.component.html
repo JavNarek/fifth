@@ -1,0 +1,29 @@
+<div class="custom-dropdown">
+  <div class="selected-option" (click)="toggleDropdown()">
+    {{ selectedItemName || "Select an option" }}
+    <i
+      class="arrow-icon"
+      [ngClass]="{ up: isDropdownOpen, down: !isDropdownOpen }"
+    ></i>
+  </div>
+  <ul *ngIf="isDropdownOpen" class="options">
+    <cdk-virtual-scroll-viewport itemSize="5" class="virtual-scroll">
+      <li>
+        <input
+          *ngIf="items.length > 5"
+          type="text"
+          [formControl]="searchControl"
+          placeholder="Select an item"
+        />
+      </li>
+      <li
+        *cdkVirtualFor="let item of filteredItems"
+        (click)="selectItem(item)"
+        [class.selected]="item.id === selectedItemId"
+      >
+        {{ item.name }}
+      </li>
+      <li *ngIf="!filteredItems.length">No results..</li>
+    </cdk-virtual-scroll-viewport>
+  </ul>
+</div>
