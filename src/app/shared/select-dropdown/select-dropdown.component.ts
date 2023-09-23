@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, forwardRef } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Optional, Output, forwardRef } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Item } from '../model/options.model';
-import { Subscription, debounceTime } from 'rxjs';
+import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
+import { VISIBLE_ITEMS_COUNT } from '../tokens/select-dropdown.token';
 
 @Component({
   selector: 'app-select-dropdown',
@@ -15,52 +16,49 @@ import { Subscription, debounceTime } from 'rxjs';
     },
   ],
 })
+
 export class SelectDropdownComponent implements OnInit, OnDestroy,  ControlValueAccessor {
   subscription!: Subscription;
   onChange: any = () => {};
   onTouched: any = () => {};
 
-  // @Input() items: Item[] = [
-  //   { name: 'Item 1', id: 1 },
-  //   { name: 'Item 2', id: 2 },
-  //   { name: 'Item 3', id: 3 },
-  //   { name: 'Item 4', id: 4 },
-  //   { name: 'Item 5', id: 5 },
-  //   { name: 'Item 6', id: 6 },
-  // ];
-  items = Array.from({length: 100000}).map((_, i) => {
+  items: Item[] = Array.from({length: 100}).map((_, i) => {
+    const count = i+1;
     return {
-      name: 'Item '+i, id: i
+      name: `Item ${count}`, id: count
     }
   });
-  @Input() visibleItemsCount: number = 5;
+  @Input() visibleItemsCount:number;
   @Output() valueChanged = new EventEmitter<number>();
   @Output() searchValueChanged = new EventEmitter<string>();
 
   selectedItemId: number | null = null;
-  selectedItemName: string = '';
-  isDropdownOpen: boolean = false;
+  selectedItemName = '';
+  isDropdownOpen = false;
   filteredItems: Item[] = [];
 
-  // constructor(@Inject('VISIBLE_ITEMS_COUNT') private defaultVisibleItemsCount: number) {
-  //   this.visibleItemsCount = this.defaultVisibleItemsCount;
-  // }
+  searchControl = new FormControl();
+
+  constructor(@Optional() @Inject(VISIBLE_ITEMS_COUNT) defaultVisibleItemsCount: number) {
+    this.visibleItemsCount = defaultVisibleItemsCount;
+  }
 
   ngOnInit() {
     this.filteredItems = this.items;
 
     this.subscription = this.searchControl.valueChanges
     .pipe(
-      debounceTime(300)
+      distinctUntilChanged(),
+      debounceTime(300),
     )
     .subscribe(term => this.filterItems(term));
   }
 
-  searchControl = new FormControl();
 
 
-  writeValue(value: any) {
+  writeValue(value: number) {
     this.selectedItemId = value;
+    this.selectedItemName = this.items.find(({ id }) => id === value)?.name || '';
   }
 
   registerOnChange(fn: any) {

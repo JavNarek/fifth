@@ -7,23 +7,27 @@
     ></i>
   </div>
   <ul *ngIf="isDropdownOpen" class="options">
-    <cdk-virtual-scroll-viewport itemSize="5" class="virtual-scroll">
-      <li>
-        <input
-          *ngIf="items.length > 5"
-          type="text"
-          [formControl]="searchControl"
-          placeholder="Select an item"
-        />
-      </li>
+    <li *ngIf="items.length > 5">
+      <input
+        type="text"
+        [formControl]="searchControl"
+        placeholder="Search..."
+      />
+    </li>
+    <cdk-virtual-scroll-viewport
+      [itemSize]="visibleItemsCount"
+      class="virtual-scroll"
+      [style.height.px]="visibleItemsCount * 40"
+    >
       <li
         *cdkVirtualFor="let item of filteredItems"
         (click)="selectItem(item)"
         [class.selected]="item.id === selectedItemId"
+        class="option"
       >
         {{ item.name }}
       </li>
-      <li *ngIf="!filteredItems.length">No results..</li>
     </cdk-virtual-scroll-viewport>
+    <li *ngIf="!filteredItems.length">No results..</li>
   </ul>
 </div>

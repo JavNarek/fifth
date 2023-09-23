@@ -1,2 +1,16 @@
-<div>Main</div>
-<app-select-dropdown></app-select-dropdown>
+<div class="flex">
+  <app-select-dropdown
+    [visibleItemsCount]="8"
+    (valueChanged)="onValueChanged($event)"
+    (searchValueChanged)="onSearchValueChanged($event)"
+  ></app-select-dropdown>
+
+  <app-select-dropdown [formControl]="searchControl"></app-select-dropdown>
+
+  <app-select-dropdown [(ngModel)]="ngModelValue"></app-select-dropdown>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <app-select-dropdown formControlName="dropdown"></app-select-dropdown>
+    <button type="submit">Submit</button>
+  </form>
+</div>
