@@ -1,16 +1,28 @@
 <div class="flex">
-  <app-select-dropdown
-    [visibleItemsCount]="8"
-    (valueChanged)="onValueChanged($event)"
-    (searchValueChanged)="onSearchValueChanged($event)"
-  ></app-select-dropdown>
+  <div>
+    <p>Example with visibleItemCount</p>
+    <app-select-dropdown
+      [visibleItemsCount]="8"
+      (valueChanged)="onValueChanged($event)"
+      (searchValueChanged)="onSearchValueChanged($event)"
+    ></app-select-dropdown>
+  </div>
 
-  <app-select-dropdown [formControl]="searchControl"></app-select-dropdown>
+  <div>
+    <p>Example with formControl</p>
+    <app-select-dropdown [formControl]="searchControl"></app-select-dropdown>
+  </div>
 
-  <app-select-dropdown [(ngModel)]="ngModelValue"></app-select-dropdown>
+  <div>
+    <p>Example with ngModel</p>
+    <app-select-dropdown [(ngModel)]="ngModelValue"></app-select-dropdown>
+  </div>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <app-select-dropdown formControlName="dropdown"></app-select-dropdown>
-    <button type="submit">Submit</button>
-  </form>
+  <div>
+    <p>Example with fomControlName</p>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <app-select-dropdown formControlName="dropdown"></app-select-dropdown>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 </div>

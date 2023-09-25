@@ -1,6 +1,5 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken } from "@angular/core";
 
-export const VISIBLE_ITEMS_COUNT = new InjectionToken<number>('visibleItemsCount', {
-  providedIn: 'root',
-  factory: () => 5,
-});
+export const VISIBLE_ITEMS_COUNT = new InjectionToken<number>(
+  "visibleItemsCount"
+);
